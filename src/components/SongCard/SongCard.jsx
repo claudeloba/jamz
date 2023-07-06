@@ -1,17 +1,14 @@
 import { Paper, Typography } from "@mui/material";
-import useFetch from "../../hooks/useFetch";
 
-const SongCard = ({ title = "song", searchQuery }) => {
-  const { data, pending, error } = useFetch("../../db/db.json");
-
-  let songElements = null;
+const SongCard = ({ data, searchQuery }) => {
+  let albumElements = null;
 
   if (data) {
-    const filteredSongs = data.songs.filter((song) =>
-      song.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredAlbums = data.albums.items.filter((album) =>
+      album.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    songElements = filteredSongs.map((song, index) => (
+    albumElements = filteredAlbums.map((album, index) => (
       <Paper
         key={index}
         elevation={4}
@@ -24,20 +21,14 @@ const SongCard = ({ title = "song", searchQuery }) => {
           overflow: "hidden",
         }}
       >
-        <Typography variant="h4">{song.title}</Typography>
-        <Typography>Artist: {song.artist}</Typography>
-        <Typography>Album: {song.album}</Typography>
+        <Typography variant="h4">{album.name}</Typography>
+        <Typography>Artist: {album.artists[0].name}</Typography>
+        <Typography>Release Date: {album.release_date}</Typography>
       </Paper>
     ));
   }
 
-  return (
-    <div>
-      {pending && <Typography>Loading...</Typography>}
-      {songElements}
-      {error && <Typography>Error: Could not reach the server</Typography>}
-    </div>
-  );
+  return <div>{albumElements}</div>;
 };
 
 export default SongCard;
